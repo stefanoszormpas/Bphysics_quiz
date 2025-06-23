@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     let currentQuestionIndex = 0;
     let userAnswers = [];
     let score = 0;
-    let initialTime = 600; // 10 λεπτά (σε δευτερόλεπτα)
+    let initialTime = 1200; // 20 λεπτά (σε δευτερόλεπτα)
     let timeLeft = initialTime;
     let timer;
     let quizCompleted = false;
