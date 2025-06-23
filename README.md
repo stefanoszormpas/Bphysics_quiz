@@ -1,1 +1,1 @@
-# Bphysics_quiz
+# fysiki-quizzes
