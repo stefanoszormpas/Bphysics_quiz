@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
+    
+    <!-- MathJax για εξισώσεις -->
     <script>
     window.MathJax = {
       tex: {
@@ -13,14 +15,29 @@
       }
     };
     </script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script id="MathJax-script" async 
+        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+    <!-- CSS -->
     <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
     <div class="quiz-container">
         <a href="index.html" class="back-button">← Πίσω</a>
-        <h1 id="quiz-title">Quiz</h1>
-        <div class="timer">Χρόνος: <span id="time">20:00</span> λεπτά</div>
+        <div class="quiz-header">
+    <h1 id="quiz-title">Quiz</h1>
+    <div class="quiz-info">
+        <div class="timer">⏱️ Χρόνος: <span id="time">00:00</span></div>
+        <div class="question-count">Ερώτηση <span id="current-number">1</span> από <span id="total-number">--</span></div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+    </div>
+</div>
+
+
+       
         <div class="question-container"></div>
         <div class="options-container"></div>
         <div class="controls">
@@ -31,18 +48,27 @@
         <div class="results"></div>
     </div>
 
+    <!-- Quiz Script -->
     <script src="assets/quiz.js"></script>
+
+    <!-- Timer και δυναμικός τίτλος -->
     <script>
-        // Βάλε δυναμικό τίτλο ανάλογα με το quiz id
         const params = new URLSearchParams(window.location.search);
         const quizId = params.get("quiz") || "1";
+
         const titles = {
-            "1": "Οριζόντια Βολή ",
+            "1": "Οριζόντια Βολή",
             "2": "Ομαλή Κυκλική Κίνηση",
-            "3": "Η διατήρηση της ορμής"
-            // προσθέτεις όσα θέλεις
+            "3": "Ορμή",
+             "4": "Βαρυτικό πεδίο"
         };
+
+        
+
+        // Ορισμός τίτλου
         document.getElementById("quiz-title").textContent = titles[quizId] || "Quiz";
-    </script>
+</script>
+       
 </body>
 </html>
+
