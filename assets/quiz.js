@@ -4,10 +4,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     let currentQuestionIndex = 0;
     let userAnswers = [];
     let score = 0;
-    let initialTime = 1200; // 20 λεπτά (σε δευτερόλεπτα)
-    let timeLeft = initialTime;
-    let timer;
-    let quizCompleted = false;
+    const urlParams = new URLSearchParams(window.location.search);
+const quizId = urlParams.get('quiz') || '1';
+
+// Διαφορετικοί χρόνοι για κάθε quiz (σε δευτερόλεπτα)
+const quizTimes = {
+    "1": 600,  
+    "2": 600,  
+    "3": 900,
+    "4": 600
+};
+
+let initialTime = quizTimes[quizId] || 600; // Αν δεν υπάρχει, default 600
+let timeLeft = initialTime;
+let timer;
+let quizCompleted = false;
 
     // Στοιχεία DOM
     const questionContainer = document.querySelector('.question-container');
@@ -42,37 +53,63 @@ document.addEventListener('DOMContentLoaded', async function() {
             const j = Math.floor(Math.random() * (i + 1));
             [questions[i], questions[j]] = [questions[j], questions[i]];
         }
+        // Ενημέρωση progress bar
+const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+document.getElementById("progress-bar-fill").style.width = `${progress}%`;
+
     }
 
     // Εμφάνιση τρέχουσας ερώτησης
     function showQuestion() {
-        if (questions.length === 0) return;
+    if (questions.length === 0) return;
 
-        const question = questions[currentQuestionIndex];
-        questionContainer.innerHTML = `<div class="math-display">${question.question}</div>`;
+    const question = questions[currentQuestionIndex];
+    questionContainer.innerHTML = "";
+
+const questionText = document.createElement("div");
+questionText.className = "math-display";
+questionText.innerHTML = question.question;
+questionContainer.appendChild(questionText);
+
+// ✅ Αν υπάρχει εικόνα, πρόσθεσέ την
+if (question.image) {
+    const image = document.createElement("img");
+    image.src = question.image;
+    image.alt = "Εικόνα ερώτησης";
+    image.classList.add("quiz-image");
+    questionContainer.appendChild(image);
+}
+
+    
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.classList.add('option');
+        optionElement.innerHTML = `<div class="math-display">${option}</div>`;
         
-        optionsContainer.innerHTML = '';
-        question.options.forEach((option, index) => {
-            const optionElement = document.createElement('div');
-            optionElement.classList.add('option');
-            optionElement.innerHTML = `<div class="math-display">${option}</div>`;
-            
-            // Επισήμανση σωστής/λάθος απάντησης (μόνο αν έχει απαντηθεί)
-            if (userAnswers[currentQuestionIndex] !== null) {
-                if (index === question.correctAnswer) {
-                    optionElement.classList.add('correct');
-                } else if (userAnswers[currentQuestionIndex] === index && index !== question.correctAnswer) {
-                    optionElement.classList.add('incorrect');
-                }
+        if (userAnswers[currentQuestionIndex] !== null) {
+            if (index === question.correctAnswer) {
+                optionElement.classList.add('correct');
+            } else if (userAnswers[currentQuestionIndex] === index && index !== question.correctAnswer) {
+                optionElement.classList.add('incorrect');
             }
-            
-            optionElement.addEventListener('click', () => selectOption(index));
-            optionsContainer.appendChild(optionElement);
-        });
-        
-        updateNavigationButtons();
-        renderMath(); // Απόδοση μαθηματικών με MathJax
-    }
+        }
+
+        optionElement.addEventListener('click', () => selectOption(index));
+        optionsContainer.appendChild(optionElement);
+    });
+
+    // Ενημέρωση αριθμού ερώτησης
+    document.getElementById("current-number").textContent = currentQuestionIndex + 1;
+    document.getElementById("total-number").textContent = questions.length;
+
+    updateNavigationButtons();
+    renderMath();
+        // Ενημέρωση progress bar
+const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+document.getElementById("progress-bar-fill").style.width = `${progress}%`;
+}
+
 
     // Επιλογή απάντησης από τον χρήστη
     function selectOption(optionIndex) {
