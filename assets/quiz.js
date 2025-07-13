@@ -11,7 +11,7 @@ const quizId = urlParams.get('quiz') || '1';
 const quizTimes = {
     "1": 1200,  
     "2": 600,  
-    "3": 900,
+    "3": 1200,
     "4": 600
 };
 
